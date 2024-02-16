@@ -1,0 +1,4 @@
+DEFINE_NEAR_METHOD(delete_attendance)
+DEFINE_NEAR_METHOD(get_all_records)
+DEFINE_NEAR_METHOD(has_attended)
+DEFINE_NEAR_METHOD(mark_attendance)
