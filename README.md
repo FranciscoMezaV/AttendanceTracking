@@ -1,4 +1,4 @@
-# Hello NEAR Contract
+# AttendanceTracking NEAR Contract
 
 The smart contract exposes four methods to enable, retrieving and delete a attendance in the NEAR network.
 
