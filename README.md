@@ -73,7 +73,7 @@ class AttendanceRecord {
 npm install
 ```
 
-5. You can run the tests to verify:
+4. You can run the tests to verify:
 ```bash
 npm test
 ```
@@ -97,9 +97,9 @@ cat ./neardev/dev-account
 
 <br />
 
-## 2. Retrieve the attendance
+## 2. Recover history 
 
-`get_all_records` is a read-only method (aka `view` method).
+`get_all_records` is a read-only method (aka `view` method). to recover record the a student
 
 `View` methods can be called for **free** by anyone, even people **without a NEAR account**!
 
@@ -122,7 +122,7 @@ near call <dev-account> mark_attendance '{"student_id":"201140030", "class_id": 
 
 <br>
 
-## 4. delete a  attendance
+## 4. Delete a  attendance
 `delete_attendance` changes the contract's state, for which it is a `call` method.
 
 ```bash
@@ -132,9 +132,9 @@ near call <dev-account> delete_attendance '{"student_id":"201140030", "class_id"
 
 <br>
 
-## 5. Recover history
+## 5. Retrieve the attendance
 
-`has_attended` is a read-only method (aka `view` method). to recover record the a student
+`has_attended` is a read-only method (aka `view` method).
 
 ```bash
 # Use near-cli to get the attendance
