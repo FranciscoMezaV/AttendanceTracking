@@ -68,6 +68,16 @@ class AttendanceRecord {
 1. Make sure you have installed [node.js](https://nodejs.org/en/download/package-manager/) >= 16.
 2. Install the [`NEAR CLI`](https://github.com/near/near-cli#setup)
 
+3. Install dependencies:
+```bash
+npm install
+```
+
+5. You can run the tests to verify:
+```bash
+npm test
+```
+
 <br />
 
 ## 1. Build and Deploy the Contract
@@ -131,7 +141,7 @@ near call <dev-account> delete_attendance '{"student_id":"201140030", "class_id"
 near view <dev-account> has_attended '{"student_id": "201140030"}'
 ```
 
-**Tip:** If you would like to call `mark_attendance` using your own account, first login into NEAR using:
+**Tip:** If you want to call a call method using your own account, first log in to NEAR using:
 
 ```bash
 # Use near-cli to login your NEAR account
