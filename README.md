@@ -95,7 +95,7 @@ cat ./neardev/dev-account
 
 ```bash
 # Use near-cli to get the attendance
-near view <dev-account> get_all_records
+near view <dev-account> get_all_records '{"student_id": "201004030"}'
 ```
 
 <br />
@@ -108,6 +108,27 @@ near view <dev-account> get_all_records
 ```bash
 # Use near-cli to set a new attendance
 near call <dev-account> mark_attendance '{"student_id":"201140030", "class_id": "24563"}' --accountId <dev-account>
+```
+
+<br>
+
+## 4. delete a  attendance
+`delete_attendance` changes the contract's state, for which it is a `call` method.
+
+```bash
+# Use near-cli to delete a attendance
+near call <dev-account> delete_attendance '{"student_id":"201140030", "class_id": "24563"}' --accountId <dev-account>
+```
+
+<br>
+
+## 5. Recover history
+
+`has_attended` is a read-only method (aka `view` method). to recover record the a student
+
+```bash
+# Use near-cli to get the attendance
+near view <dev-account> has_attended '{"student_id": "201140030"}'
 ```
 
 **Tip:** If you would like to call `mark_attendance` using your own account, first login into NEAR using:
