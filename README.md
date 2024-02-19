@@ -1,23 +1,63 @@
 # Hello NEAR Contract
 
-The smart contract exposes two methods to enable storing and retrieving a greeting in the NEAR network.
+The smart contract exposes four methods to enable, retrieving and delete a attendance in the NEAR network.
 
 ```ts
 @NearBindgen({})
-class HelloNear {
-  greeting: string = "Hello";
+class AttendanceRecord {
+    attended: UnorderedMap<attendace_model> = new UnorderedMap<attendace_model>('unique-id-map1');
 
-  @view // This method is read-only and can be called for free
-  get_greeting(): string {
-    return this.greeting;
-  }
+    @call({})
+    mark_attendance({ student_id, class_id }: { student_id: string, class_id: string }): void {
+        const checker: AccountId = near.predecessorAccountId();
+        const attendance: attendace_model = new attendace_model({ check: true, checker, class_id });
+        this.attended.set(student_id, attendance);
+        near.log(`Student ${student_id} attended class with enrollment ${class_id}. Reviewed by ${checker}`);
+    }
 
-  @call // This method changes the state, for which it cost gas
-  set_greeting({ greeting }: { greeting: string }): void {
-    // Record a log permanently to the blockchain!
-    near.log(`Saving greeting ${greeting}`);
-    this.greeting = greeting;
-  }
+    @view({})
+    get_all_records({ student_id }: { student_id: string }): attendace_model {
+      const record = this.attended.get(student_id);
+      if(record){
+        const msg = `The attendance records for student ${student_id} are: ${record}`;
+        near.log(msg);
+        return record; 
+      }else{
+        near.log(`The student ${student_id} doesn't have record`);
+        return null;
+      }     
+    }
+
+    @view({})
+    has_attended({ student_id }: { student_id: string }): boolean {
+        const attendance = this.attended.get(student_id);
+        if(attendance){
+          if(attendance.check){
+            near.log(`The student ${student_id} does have attendance in ${attendance.class_id}`)
+          }else{
+            near.log(`The student ${student_id} doesn't have attendance in ${attendance.class_id}`)
+          }
+          return attendance.check
+        }else{
+          near.log(`The student ${student_id} doesn't have record`);
+        return false;
+        }
+    }
+
+    @call({})
+    delete_attendance({ student_id, class_id }: { student_id: string, class_id:string }): boolean {
+        const record = this.attended.get(student_id);
+        let res = false;
+        if(record.check && record.class_id == class_id){
+          record.check = false;
+          near.log(`Attendance record for student ${student_id} deleted successfully`);
+          res = true;
+        }else{
+          near.log(`The student ${student_id} does not currently have assistance`)
+          res = false;
+        }
+        return res;
+    }
 }
 ```
 
@@ -47,30 +87,30 @@ cat ./neardev/dev-account
 
 <br />
 
-## 2. Retrieve the Greeting
+## 2. Retrieve the attendance
 
-`get_greeting` is a read-only method (aka `view` method).
+`get_all_records` is a read-only method (aka `view` method).
 
 `View` methods can be called for **free** by anyone, even people **without a NEAR account**!
 
 ```bash
-# Use near-cli to get the greeting
-near view <dev-account> get_greeting
+# Use near-cli to get the attendance
+near view <dev-account> get_all_records
 ```
 
 <br />
 
-## 3. Store a New Greeting
-`set_greeting` changes the contract's state, for which it is a `call` method.
+## 3. Store a New attendance
+`mark_attendance` changes the contract's state, for which it is a `call` method.
 
 `Call` methods can only be invoked using a NEAR account, since the account needs to pay GAS for the transaction.
 
 ```bash
-# Use near-cli to set a new greeting
-near call <dev-account> set_greeting '{"greeting":"howdy"}' --accountId <dev-account>
+# Use near-cli to set a new attendance
+near call <dev-account> mark_attendance '{"student_id":"201140030", "class_id": "24563"}' --accountId <dev-account>
 ```
 
-**Tip:** If you would like to call `set_greeting` using your own account, first login into NEAR using:
+**Tip:** If you would like to call `mark_attendance` using your own account, first login into NEAR using:
 
 ```bash
 # Use near-cli to login your NEAR account
